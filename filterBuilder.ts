@@ -1,19 +1,20 @@
 export interface IFilterBuilder<T, Self = any> {
+  where<K extends keyof T>(key: K, predicate: (itemValue: T[K], targetValue: any) => boolean, targetValue: any): Self;
   wherePredicate(predicate: (item: T) => boolean): Self;
   build(): T[];
 }
 
-export interface FilterFunctionalBuilder<T> extends IFilterBuilder<T, FilterFunctionalBuilder<T>> {
-  where: <K extends keyof T>(
-    key: K,
-    predicate: (itemValue: T[K], targetValue: any) => boolean,
-    targetValue: any
-  ) => FilterFunctionalBuilder<T>;
-  wherePredicate: (predicate: (item: T) => boolean) => FilterFunctionalBuilder<T>;
-  build: () => T[];
-}
+// export interface FilterFunctionalBuilder<T> extends IFilterBuilder<T, FilterFunctionalBuilder<T>> {
+//   where: <K extends keyof T>(
+//     key: K,
+//     predicate: (itemValue: T[K], targetValue: any) => boolean,
+//     targetValue: any
+//   ) => FilterFunctionalBuilder<T>;
+//   wherePredicate: (predicate: (item: T) => boolean) => FilterFunctionalBuilder<T>;
+//   build: () => T[];
+// }
 
-export const createFilterBuilder = <T>(items: T[]): FilterFunctionalBuilder<T> => {
+export const createFilterBuilder = <T>(items: T[]): IFilterBuilder<T> => {
   // Mantenemos una referencia inmutable del estado actual
   const currentItems: T[] = [...items];
 
@@ -41,3 +42,4 @@ export const createFilterBuilder = <T>(items: T[]): FilterFunctionalBuilder<T> =
     build: () => [...currentItems],
   };
 };
+
